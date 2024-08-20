@@ -1,0 +1,18 @@
+credentials:
+  users:
+    sampleuser:
+      password: 'samplepassword'
+      privileges:
+        - permissions: [ read, write ]
+          spaces: [ kv_store, users ]
+groups:
+  group-001:
+    replicasets:
+      replicaset-001:
+        instances:
+          instance-001:
+            iproto:
+              listen:
+              - uri: 'localhost:3302'
+app:
+  file: 'test_app.lua'

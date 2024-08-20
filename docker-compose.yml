@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - tarantool
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+
+  tarantool:
+    image: tarantool/tarantool:latest
+    container_name: tarantool_container
+    ports:
+      - "3301:3301"
+    volumes:
+      - ./db/app:/opt/tarantool
+    command: tarantool -c /opt/tarantool/config.yaml
+    restart: unless-stopped
+
+  test_tarantool:
+    image: tarantool/tarantool:latest
+    container_name: test_tarantool_container
+    ports:
+      - "3302:3302"
+    volumes:
+      - ./db/test:/opt/tarantool
+    command: tarantool -c /opt/tarantool/test_config.yaml
+
+  test_app:
+    build:
+      dockerfile: Dockerfile-tests
+    depends_on:
+      - test_tarantool
+    environment:
+      - DB_HOST=${TEST_DB_HOST}
+      - DB_PORT=${TEST_DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}

@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+tarantool
+passlib
+PyJWT
+asynctnt
+httpx
+pytest
+pytest-asyncio
